@@ -60,7 +60,7 @@ void OdomEstimationClass::updatePointsToMap(const pcl::PointCloud<pcl::PointXYZR
 
             ceres::Solver::Options options;
             options.linear_solver_type = ceres::DENSE_QR;
-            options.max_num_iterations = 4;
+            options.max_num_iterations = 40; //4
             options.minimizer_progress_to_stdout = false;
             options.check_gradients = false;
             options.gradient_check_relative_precision = 1e-4;

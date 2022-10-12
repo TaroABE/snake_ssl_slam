@@ -15,7 +15,7 @@
     
 
     <node pkg="ssl_slam" type="ssl_slam_laser_processing_node" name="ssl_slam_laser_processing_node" output="log">
-        <remap from="/camera/depth/color/points" to="scan"/>
+        <!-- <remap from="/camera/depth/color/points" to="scan"/> -->
     </node>
     <node pkg="ssl_slam" type="ssl_slam_odom_estimation_node" name="ssl_slam_odom_estimation_node" output="log"/>
     <node pkg="ssl_slam" type="ssl_slam_laser_mapping_node" name="ssl_slam_laser_mapping_node" output="log"/>

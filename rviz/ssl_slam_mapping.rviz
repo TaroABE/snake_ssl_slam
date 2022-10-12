@@ -7,9 +7,8 @@ Panels:
         - /Global Options1
         - /Status1
         - /Image1
-        - /Image1/Status1
         - /TF1/Frames1
-        - /raw_data1/Status1
+        - /raw_data1
         - /map1
       Splitter Ratio: 0.5
     Tree Height: 518
@@ -86,86 +85,6 @@ Visualization Manager:
           Value: false
         camera_link:
           Value: false
-        head_base_link:
-          Value: true
-        head_rotate_link:
-          Value: true
-        imu:
-          Value: true
-        l515_camera_link:
-          Value: true
-        link0:
-          Value: true
-        link1:
-          Value: true
-        link10:
-          Value: true
-        link11:
-          Value: true
-        link12:
-          Value: true
-        link13:
-          Value: true
-        link14:
-          Value: true
-        link15:
-          Value: true
-        link16:
-          Value: true
-        link17:
-          Value: true
-        link18:
-          Value: true
-        link19:
-          Value: true
-        link2:
-          Value: true
-        link20:
-          Value: true
-        link21:
-          Value: true
-        link22:
-          Value: true
-        link23:
-          Value: true
-        link24:
-          Value: true
-        link25:
-          Value: true
-        link26:
-          Value: true
-        link27:
-          Value: true
-        link28:
-          Value: true
-        link29:
-          Value: true
-        link3:
-          Value: true
-        link30:
-          Value: true
-        link31:
-          Value: true
-        link32:
-          Value: true
-        link33:
-          Value: true
-        link34:
-          Value: true
-        link35:
-          Value: true
-        link4:
-          Value: true
-        link5:
-          Value: true
-        link6:
-          Value: true
-        link7:
-          Value: true
-        link8:
-          Value: true
-        link9:
-          Value: true
         map:
           Value: true
       Marker Scale: 3
@@ -194,9 +113,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 204; 0; 0
-      Max Intensity: 1
       Min Color: 238; 238; 236
-      Min Intensity: 0
       Name: raw_data
       Position Transformer: XYZ
       Queue Size: 10
@@ -204,7 +121,7 @@ Visualization Manager:
       Size (Pixels): 2
       Size (m): 0.009999999776482582
       Style: Points
-      Topic: /camera/depth/color/points
+      Topic: /velodyne_points_filtered
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: false
@@ -224,9 +141,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 2.9287137904388677e-43
       Min Color: 0; 0; 0
-      Min Intensity: 5.74532370373175e-44
       Name: map
       Position Transformer: XYZ
       Queue Size: 10
@@ -277,9 +192,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 4096
       Min Color: 0; 0; 0
-      Min Intensity: 0
       Name: PointCloud2
       Position Transformer: XYZ
       Queue Size: 10

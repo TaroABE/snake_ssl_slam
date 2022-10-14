@@ -19,7 +19,14 @@ void OdomEstimationClass::init(lidar::Lidar lidar_param, double map_resolution){
 
     odom = Eigen::Isometry3d::Identity();
     last_odom = Eigen::Isometry3d::Identity();
+    compensate_odom = Eigen::Isometry3d::Identity();
     optimization_count=2;
+}
+
+void OdomEstimationClass::initOdometry(sensor_msgs::Imu imu){
+    Eigen::Quaterniond quat(imu.orientation.w, imu.orientation.x, imu.orientation.y, imu.orientation.z);
+    compensate_odom.linear() = quat.toRotationMatrix();
+    // odom.translation():
 }
 
 void OdomEstimationClass::initMapWithPoints(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& edge_in, const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& surf_in){

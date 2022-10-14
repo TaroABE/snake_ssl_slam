@@ -31,7 +31,9 @@
 //LOCAL LIB
 #include "lidar.h"
 #include "lidarOptimization.h"
+
 #include <ros/ros.h>
+#include <sensor_msgs/Imu.h>
 
 class OdomEstimationClass 
 {
@@ -43,8 +45,11 @@ class OdomEstimationClass
 		void initMapWithPoints(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& edge_in, const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& surf_in);
 		void updatePointsToMap(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& edge_in, const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& surf_in);
 		void getMap(pcl::PointCloud<pcl::PointXYZRGB>::Ptr& laserCloudMap);
+		void initOdometry(sensor_msgs::Imu imu);
 
 		Eigen::Isometry3d odom;
+		Eigen::Isometry3d compensate_odom;
+
 		pcl::PointCloud<pcl::PointXYZRGB>::Ptr laserCloudCornerMap;
 		pcl::PointCloud<pcl::PointXYZRGB>::Ptr laserCloudSurfMap;
 	private:

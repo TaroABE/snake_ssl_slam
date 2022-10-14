@@ -13,6 +13,7 @@
 //ros lib
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/Imu.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
@@ -33,6 +34,8 @@ std::queue<sensor_msgs::PointCloud2ConstPtr> pointCloudSurfBuf;
 std::queue<sensor_msgs::PointCloud2ConstPtr> pointCloudBuf;
 lidar::Lidar lidar_param;
 
+sensor_msgs::Imu imu_data_;
+bool is_imu_data = false;
 ros::Publisher pubLaserOdometry;
 void velodyneSurfHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
 {
@@ -51,6 +54,13 @@ void velodyneHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
     mutex_lock.lock();
     pointCloudBuf.push(laserCloudMsg);
     mutex_lock.unlock();
+}
+void imuHandler (const sensor_msgs::ImuConstPtr& imu_data_raw)
+{
+    if (!is_imu_data){ 
+        is_imu_data = true;
+    }
+    imu_data_ = *imu_data_raw;
 }
 
 bool is_odom_inited = false;
@@ -82,6 +92,12 @@ void odom_estimation(){
                 mutex_lock.unlock();
                 continue;  
             }
+
+            if(!is_imu_data){
+                // is_imu_data = true;
+                ROS_INFO("Imu data for initializing self-position.");
+                continue;
+            }
             //if time aligned 
 
             pcl::PointCloud<pcl::PointXYZRGB>::Ptr pointcloud_surf_in(new pcl::PointCloud<pcl::PointXYZRGB>());
@@ -98,6 +114,7 @@ void odom_estimation(){
 
             if(is_odom_inited == false){
                 odomEstimation.initMapWithPoints(pointcloud_edge_in, pointcloud_surf_in);
+                odomEstimation.initOdometry(imu_data_);
                 is_odom_inited = true;
                 ROS_INFO("odom inited");
             }else{
@@ -113,9 +130,13 @@ void odom_estimation(){
                     ROS_INFO("average odom estimation time %f ms \n \n", total_time/total_frame);
             }
 
-            Eigen::Quaterniond q_current(odomEstimation.odom.rotation());
+                //Conpensete with imu 
+            Eigen::Isometry3d od = Eigen::Isometry3d::Identity();
+            od = odomEstimation.odom * odomEstimation.compensate_odom;
+
+            Eigen::Quaterniond q_current(od.rotation());
             //q_current.normalize();
-            Eigen::Vector3d t_current = odomEstimation.odom.translation();
+            Eigen::Vector3d t_current = od.translation();
 
             static tf::TransformBroadcaster br;
             tf::Transform transform;
@@ -173,6 +194,7 @@ int main(int argc, char **argv)
     ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/velodyne_points_filtered", 100, velodyneHandler);
     ros::Subscriber subEdgeLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_edge", 100, velodyneEdgeHandler);
     ros::Subscriber subSurfLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_surf", 100, velodyneSurfHandler);
+    ros::Subscriber subImu = nh.subscribe<sensor_msgs::Imu>("/imu/data", 100, imuHandler);
 
     pubLaserOdometry = nh.advertise<nav_msgs::Odometry>("/odom", 100);
     std::thread odom_estimation_process{odom_estimation};

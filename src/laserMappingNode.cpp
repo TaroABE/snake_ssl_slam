@@ -90,7 +90,7 @@ void laser_mapping(){
 
             if(angular_change>90) angular_change = fabs(180 - angular_change);
             
-            if(displacement>0.3 || angular_change>20){
+            if(displacement>0.01 || angular_change>2.0){
                 //ROS_INFO("update map %f,%f",displacement,angular_change);
                 last_pose = current_pose;
                 laserMapping.updateCurrentPointsToMap(pointcloud_in,current_pose);
@@ -99,7 +99,7 @@ void laser_mapping(){
                 sensor_msgs::PointCloud2 PointsMsg;
                 pcl::toROSMsg(*pc_map, PointsMsg);
                 PointsMsg.header.stamp = pointcloud_time;
-                PointsMsg.header.frame_id = "map";
+                PointsMsg.header.frame_id = "ssl_map";
                 map_pub.publish(PointsMsg); 
             }
             
